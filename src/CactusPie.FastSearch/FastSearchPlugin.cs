@@ -1,11 +1,12 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
-using JetBrains.Annotations;
+using CactusPie.FastSearch.Patches;
 
 namespace CactusPie.FastSearch
 {
-    [BepInPlugin("com.cactuspie.fastsearch", "CactusPie.FastSearch", "1.0.0")]
+    [BepInPlugin("com.cactuspie.fastsearch", "CactusPie.FastSearch", "1.1.0")]
+    [BepInDependency("com.spt-aki.core", "3.5.0")]
     public class FastSearchPlugin : BaseUnityPlugin
     {
         internal static ConfigEntry<float> SearchTimeMultiplier { get; private set; }
@@ -13,22 +14,21 @@ namespace CactusPie.FastSearch
         
         internal static ManualLogSource SearchTimePluginLogger { get; private set; }
         
-        [UsedImplicitly]
         internal void Start()
         {
             SearchTimePluginLogger = Logger;
             Logger.LogInfo("Search time reduction");
 
-            const string sectionName = "Search time settings";
+            const string sectionName = "Settings";
             
             SearchTimeMultiplier = Config.Bind
             (
                 sectionName,
-                "Search time multiplier",
+                "Multiplier",
                 0f,
                 new ConfigDescription
                 (
-                    "The time between revealing each item", 
+                    "The time between revealing each item.", 
                     new AcceptableValueRange<float>(0f, 1f)
                 )
             );
@@ -36,11 +36,11 @@ namespace CactusPie.FastSearch
             SearchInitialDelayEnabled = Config.Bind
             (
                 sectionName,
-                "Search initial delay",
+                "Initial delay",
                 false,
                 new ConfigDescription
                 (
-                    "Enable or disable the time it takes to start searching after opening a container"
+                    "Enable/disable the time to start searching after opening a container."
                 )
             );
             
