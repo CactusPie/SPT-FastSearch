@@ -19,21 +19,22 @@ namespace CactusPie.FastSearch
         protected override MethodBase GetTargetMethod()
         {
             _searchOperationClass = PatchConstants.EftTypes.Single(x => x.GetMethod("GetNextDiscoveryTime", BindingFlags.Static | BindingFlags.Public) != null);
+            
             _terminatedField = _searchOperationClass.GetField("Terminated", BindingFlags.Instance | BindingFlags.Public);
-            var searchOperationFields = _searchOperationClass.GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
+            FieldInfo[] searchOperationFields = _searchOperationClass.GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
             _inventoryControllerField = searchOperationFields.Single(x => x.FieldType == typeof(InventoryControllerClass));
             _searchableItemField = searchOperationFields.Single(x => x.FieldType == typeof(SearchableItemClass));
 
             return AccessTools.GetDeclaredMethods(_searchOperationClass).FirstOrDefault(IsTargetMethod);
         }
 
-        private static bool IsTargetMethod(MethodInfo mi)
+        private static bool IsTargetMethod(MethodInfo methodInfo)
         {
-            var parameters = mi.GetParameters();
+            ParameterInfo[] parameters = methodInfo.GetParameters();
             return parameters.Length >= 2
                 && parameters[0].Name == "callback"
                 && parameters[1].Name == "isInstant"
-                && mi.ReturnType == typeof(System.Collections.IEnumerator);
+                && methodInfo.ReturnType == typeof(System.Collections.IEnumerator);
         }
 
         [PatchPrefix]
