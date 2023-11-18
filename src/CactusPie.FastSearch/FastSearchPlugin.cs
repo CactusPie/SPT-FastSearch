@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 namespace CactusPie.FastSearch
 {
-    [BepInPlugin("com.cactuspie.fastsearch", "CactusPie.FastSearch", "1.0.0")]
+    [BepInPlugin("com.cactuspie.fastsearch", "CactusPie.FastSearch", "1.1.0")]
     public class FastSearchPlugin : BaseUnityPlugin
     {
         internal static ConfigEntry<float> SearchTimeMultiplier { get; private set; }
