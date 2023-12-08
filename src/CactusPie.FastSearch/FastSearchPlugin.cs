@@ -10,9 +10,10 @@ namespace CactusPie.FastSearch
     {
         internal static ConfigEntry<float> SearchTimeMultiplier { get; private set; }
         internal static ConfigEntry<bool> SearchInitialDelayEnabled { get; private set; }
-        
+        internal static ConfigEntry<bool> InstantlyRevealEverything { get; private set; }
+
         internal static ManualLogSource SearchTimePluginLogger { get; private set; }
-        
+
         [UsedImplicitly]
         internal void Start()
         {
@@ -20,7 +21,7 @@ namespace CactusPie.FastSearch
             Logger.LogInfo("Search time reduction");
 
             const string sectionName = "Search time settings";
-            
+
             SearchTimeMultiplier = Config.Bind
             (
                 sectionName,
@@ -28,11 +29,11 @@ namespace CactusPie.FastSearch
                 0f,
                 new ConfigDescription
                 (
-                    "The time between revealing each item", 
+                    "The time between revealing each item",
                     new AcceptableValueRange<float>(0f, 1f)
                 )
             );
-            
+
             SearchInitialDelayEnabled = Config.Bind
             (
                 sectionName,
@@ -43,9 +44,21 @@ namespace CactusPie.FastSearch
                     "Enable or disable the time it takes to start searching after opening a container"
                 )
             );
-            
+
+            InstantlyRevealEverything = Config.Bind
+            (
+                sectionName,
+                "Instantly reveal everything",
+                false,
+                new ConfigDescription
+                (
+                    "Instantly reveals everything - no need to even press the search button. Overrides other settings for this mod."
+                )
+            );
+
             new SearchTimePatch().Enable();
             new SearchInitialDelayPatch().Enable();
+            new AutoUncoverPatch().Enable();
         }
     }
 }
